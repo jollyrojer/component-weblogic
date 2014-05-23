@@ -4,10 +4,12 @@ application:
     input.weblogic-user-password: "123QweAsd"
     input.weblogic-binary-url: "https://s3.amazonaws.com/ab-atg/wls1036_generic.jar"
     input.jrokit-binary-url: "https://s3.amazonaws.com/ab-atg/jrockit-jdk1.6.0_45-R28.2.7-4.1.0-linux-x64.bin"
-    input.image: "us-east-1/ami-ee698586"
+    #input.image: "us-east-1/ami-52009e3b"
+    input.image: "us-east-1/ami-23405a4a"
+    #input.image-user: "ec2-user"
     input.image-user: "root"
     input.instance-size: "m1.xlarge"
-    input.recipe-url: "https://dl.dropboxusercontent.com/u/250836/weblogic-cookbooks.tar.gz"
+    input.recipe-url: "https://s3.amazonaws.com/qubell-starter-kit-artifacts/qubell-bazaar/component-oracle-weblogic-cookbooks-stable-b800e14.tar.gz"
     input.installation-dir: "/opt/middleware"
     input.tmp-dir: "/tmp"
 
@@ -86,6 +88,18 @@ application:
                     roleName: default
                   output:
                     wl-hosts: ips
+                    
+              - mount-storage:
+                  action: execrun
+                  precedingPhases: [launch-vm]
+                  parameters:
+                    roles: [ default ]
+                    isSudo: true
+                    command:
+                      - |
+                        mkdir -p /media/ephemeral0
+                        mount | grep /media/ephemeral0 || mount `curl -s http://169.254.169.254/latest/meta-data/block-device-mapping/ephemeral0 | tr 'a-d' 'e-h' | sed 's#^..#/dev/xvd#'` /media/ephemeral0
+                        yum -y install dejavu*
 
               - set-hostname:
                   action: execrun
@@ -105,7 +119,7 @@ application:
                   parameters:
                     roles: [default]
                     recipeUrl: "{$.recipe-url}"
-                    runList: ["recipe[weblogic_component::default]"]
+                    runList: ["recipe[weblogic::default]"]
                     jattrs:
                       weblogic:
                         user: "{$.weblogic-user}"
