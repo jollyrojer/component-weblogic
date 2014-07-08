@@ -17,7 +17,6 @@ Features
 
 Configurations
 --------------
-[![Build Status](https://travis-ci.org/qubell-bazaar/component-oracle-weblogic.png?branch=master)](https://travis-ci.org/qubell-bazaar/component-oracle-weblogic)
 
  - Oracle Weblogic Server 11g, CentOS 6.4 (us-east-1/ami-ee698586) AWS EC2 m1.xlarge, root
  - Oracle Weblogic Server 11g, Amazon Linux (us-east-1/ami-1ba18d72) AWS EC2 m1.xlarge, ec2-user
