@@ -7,7 +7,7 @@ application:
     input.image: "us-east-1/ami-ee698586"
     input.image-user: "root"
     input.instance-size: "m1.xlarge"
-    input.recipe-url: "https://s3.amazonaws.com/qubell-starter-kit-artifacts/qubell-bazaar/component-oracle-weblogic-cookbooks-stable-b800e14.tar.gz"
+    input.recipe-url: "https://s3.amazonaws.com/qubell-starter-kit-artifacts/qubell-bazaar/component-oracle-weblogic-cookbooks-stable-7e08fc5.tar.gz"
     input.installation-dir: "/opt/middleware"
     input.tmp-dir: "/tmp"
 
