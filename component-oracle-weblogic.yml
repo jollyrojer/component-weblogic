@@ -6,8 +6,8 @@ application:
     input.jrokit-binary-url: "https://s3.amazonaws.com/ab-atg/jrockit-jdk1.6.0_45-R28.2.7-4.1.0-linux-x64.bin"
     input.image: "us-east-1/ami-ee698586"
     input.image-user: "root"
-    input.instance-size: "m1.xlarge"
-    input.recipe-url: "https://s3.amazonaws.com/qubell-starter-kit-artifacts/qubell-bazaar/component-oracle-weblogic-cookbooks-stable-bc275ec.tar.gz"
+    input.instance-size: "m3.xlarge"
+    input.recipe-url: "https://s3.amazonaws.com/qubell-starter-kit-artifacts/qubell-bazaar/component-oracle-weblogic-cookbooks-stable-070b3c8.tar.gz"
     input.installation-dir: "/opt/middleware"
     input.tmp-dir: "/tmp"
 
