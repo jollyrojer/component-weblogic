@@ -1,35 +1,34 @@
 application:
   configuration:
-    input.weblogic-user: "weblogic"
-    input.weblogic-user-password: "123QweAsd"
-    input.weblogic-binary-url: "https://s3.amazonaws.com/ab-atg/wls1036_generic.jar"
-    input.jrokit-binary-url: "https://s3.amazonaws.com/ab-atg/jrockit-jdk1.6.0_45-R28.2.7-4.1.0-linux-x64.bin"
-    input.image: "us-east-1/ami-ee698586"
-    input.image-user: "root"
-    input.instance-size: "m1.xlarge"
-    input.recipe-url: "https://s3.amazonaws.com/qubell-starter-kit-artifacts/qubell-bazaar/component-oracle-weblogic-cookbooks-stable-070b3c8.tar.gz"
-    input.installation-dir: "/opt/middleware"
-    input.tmp-dir: "/tmp"
+    configuration.weblogic-user: "weblogic"
+    configuration.weblogic-user-password: "123QweAsd"
+    configuration.weblogic-binary-url: "https://s3.amazonaws.com/ab-atg/wls1036_generic.jar"
+    configuration.jrokit-binary-url: "https://s3.amazonaws.com/ab-atg/jrockit-jdk1.6.0_45-R28.2.7-4.1.0-linux-x64.bin"
+    configuration.recipe-url: "https://s3.amazonaws.com/qubell-starter-kit-artifacts/qubell-bazaar/component-oracle-weblogic-cookbooks-stable-7e08fc5.tar.gz"
+    configuration.installation-dir: "/opt/middleware"
+    configuration.tmp-dir: "/tmp"
+    compute.imageId: "ami-bf5021d6"
+    compute.login: "root"
+    compute.hardwareId: "m1.xlarge"
+    compute.locationId: "us-east-1"
 
   interfaces:
-    input:
-      weblogic-user: "bind(workflow#input.weblogic-user)"
-      weblogic-user-password: "bind(workflow#input.weblogic-user-password)"
-      weblogic-binary-url: "bind(workflow#input.weblogic-binary-url)"
-      jrokit-binary-url: "bind(workflow#input.jrokit-binary-url)"
-      image: "bind(workflow#input.image)"
-      image-user: "bind(workflow#input.image-user)"
-      instance-size: "bind(workflow#input.instance-size)"
-      recipe-url: "bind(workflow#input.recipe-url)"
-      installation-dir: "bind(workflow#input.installation-dir)"
-      tmp-dir: "bind(workflow#input.tmp-dir)"
-    output:
-      wl-hosts: "bind(workflow#result.wl-hosts)"
-      wl-port: "bind(workflow#result.wl-admin-port)"
-      wl-console: "bind(workflow#result.wl-console)"
-      wl-hostname: "bind(workflow#result.wl-hostname)"
+    configuration:
+      "*": "bind(workflow#input.*)"
+    compute:
+      hardwareId: "bind(compute#configuration.hardwareId)"
+      imageId:    "bind(compute#configuration.imageId)"
+      login:      "bind(compute#configuration.login)"
+      locationId: "bind(compute#configuration.locationId)"
+    weblogic:
+      "*": "bind(workflow#result.*)"
+
+  bindings:
+   - [workflow, compute]
 
   components:
+    compute:
+      type: compute.Instance
     workflow:
       type: workflow.Instance
       interfaces:
@@ -38,60 +37,33 @@ application:
           weblogic-user-password: configuration(string)
           weblogic-binary-url: configuration(string)
           jrokit-binary-url: configuration(string)
-          image: configuration(string)
-          image-user: configuration(string)
-          instance-size: configuration(string)
           recipe-url: configuration(string)
           installation-dir: configuration(string)
           tmp-dir: configuration(string)
+        compute:
+          networks:   consume-signal(map<string, map<string, string>>)
+          exec:       send-command(string command, int timeout => string stdOut, string stdErr => string stdOut, string stdErr, int exitCode)
+          put-file:   send-command(string filename, bytes payload)
+          get-file:   send-command(string filename => bytes payload)
         result:
-          wl-hosts: publish-signal(list<string>)
+          wl-hosts: publish-signal(string)
           wl-admin-port: publish-signal(string)
           wl-console: publish-signal(string)
           wl-hostname: publish-signal(string)
-
+      required: [ compute ]
       configuration:
         configuration.workflows:
           launch:
-            parameters:
-              - weblogic-user:
-                  description: Weblogic user
-              - weblogic-user-password:
-                  description: Weblogic user password
-              - weblogic-binary-url:
-                  description: Weblogic source URL
-              - jrokit-binary-url:
-                  description: JRokit source URL
-              - image:
-                  description: AMI id
-              - image-user:
-                  description: User for ssh connection
-              - instance-size:
-                  description: Instance type
-              - recipe-url:
-                  description: Chefsolo recipe URL
-              - installation-dir:
-                  description: Bea_home path
-                  default: "/opt/middleware"
-              - tmp-dir:
-                  description: TMP dir path
-                  default: "/tmp"
             steps:
-              - launch-vm:
-                  action: provisionVms
-                  parameters:
-                    hardwareId: "{$.instance-size}"
-                    imageId: "{$.image}"
-                    vmIdentity: "{$.image-user}"
-                    roleName: default
+              - get-signals:
+                  action: getSignals
                   output:
-                    wl-hosts: ips
-                    
+                    signals: result
               - mount-storage:
                   action: execrun
-                  precedingPhases: [launch-vm]
+                  precedingPhases: [ get-signals ]
                   parameters:
-                    roles: [ default ]
+                    roles: [ compute ]
                     isSudo: true
                     command:
                       - |
@@ -104,7 +76,7 @@ application:
                   phase: set-hostname
                   precedingPhases: [ mount-storage ]
                   parameters:
-                    roles: [ default ]
+                    roles: [ compute ]
                     isSudo: true
                     command:
                       - curl -s http://169.254.169.254/latest/meta-data/public-hostname
@@ -115,7 +87,7 @@ application:
                   action: chefsolo
                   precedingPhases: [set-hostname]
                   parameters:
-                    roles: [default]
+                    roles: [ compute ]
                     recipeUrl: "{$.recipe-url}"
                     runList: ["recipe[weblogic::default]"]
                     jattrs:
@@ -132,7 +104,7 @@ application:
 
             return:
               wl-hosts: 
-                value: "{$.wl-hosts}"
+                value: "{$.signals.compute.networks.public.ip}"
               wl-admin-port:
                 value: "7001"
               wl-hostname:

@@ -25,11 +25,11 @@ class OracleWeblogicTestCase(BaseComponentTestCase):
     }]
 
     @instance(byApplication=name)
-    @values({"output.wl-hosts": "hosts", "output.wl-port": "port"})
-    def test_port(self, instance, hosts, port):
+    def test_port(self, instance):
         import socket
-
+        host = instance.returnValues['weblogic.wl-hosts']
+        port = instance.returnValues['weblogic.wl-admin-port']       
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        result = sock.connect_ex((hosts, int(port)))
+        result = sock.connect_ex((host, int(port)))
 
         assert result == 0
