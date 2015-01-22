@@ -4,15 +4,26 @@ from qubell.api.testing import *
 
 @environment({
     "default": {},
-    "AmazonEC2_Amazon_Linux": {
+#    "AmazonEC2_Amazon_Linux": {
+#        "policies": [{
+#            "action": "provisionVms",
+#            "parameter": "imageId",
+#            "value": "us-east-1/ami-1ba18d72"
+#        }, {
+#            "action": "provisionVms",
+#            "parameter": "vmIdentity",
+#            "value": "ec2-user"
+#        }]
+#    },
+    "AmazonEC2_CentOS_65": {
         "policies": [{
             "action": "provisionVms",
             "parameter": "imageId",
-            "value": "us-east-1/ami-1ba18d72"
+            "value": "us-east-1/ami-ee698586"
         }, {
             "action": "provisionVms",
             "parameter": "vmIdentity",
-            "value": "ec2-user"
+            "value": "root"
         }]
     }
 })
