@@ -1,16 +1,16 @@
 kit:
-  name: "Oracle Weblogic Server 11g (Dev)"
+  name: "Oracle Weblogic Server"
   link: https://github.com/qubell-bazaar/component-oracle-weblogic 
 
   applications:
-    - name: "Application Server"
-      manifest: https://raw.github.com/qubell-bazaar/component-oracle-weblogic/1.1-35p/component-oracle-weblogic.yml
+    - name: "WebLogic"
+      manifest: https://raw.github.com/qubell-bazaar/component-oracle-weblogic/2.0-43p/component-oracle-weblogic.yml
   provider:
-    name: "Qubell"
-    link: http://qubell.com
+    name: "Tonomi"
+    link: http://www.tonomi.com
   documentation:
     overview: |
-      This application requires the following items to be configured in your environment:
-        * Amazon EC2 or Rackspace CloudServers account;
-        * Port 7001 open on the ﬁrewall.
-      Please refer to the Getting Started for step-by-step instructions on how to configure your environment.
+      Pre-requisites:
+        - AWS account
+        - CentOS 6 x86_64
+        - Oracle WebLogic installation files
