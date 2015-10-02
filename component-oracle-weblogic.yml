@@ -4,7 +4,7 @@ application:
     input.windows-password: "qwerty12!"
     input.weblogic-password: "123QweAsd"
     input.weblogic-domain: "Default"
-    input.recipe-url: "https://qubell-starter-kit-artifacts.s3.amazonaws.com/qubell-bazaar/component-oracle-weblogic-cookbooks-stable-99999.tar.gz"
+    input.recipe-url: "https://qubell-starter-kit-artifacts.s3.amazonaws.com/qubell-bazaar/component-oracle-weblogic-cookbooks-stable-9d0f5de.tar.gz"
 
   interfaces:
     input:

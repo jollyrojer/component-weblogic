@@ -1,14 +1,14 @@
 Oracle WebLogic Server
 =====
 
-Version 1.1-35p
+Version 2.0-43p
 -------------
 
 ![](http://www.oracle.com/ocom/groups/public/@otn/documents/digitalasset/352606.gif)
 
 Installs and configures Oracle Weblogic Server
 
-[![Install](https://raw.github.com/qubell-bazaar/component-skeleton/master/img/install.png)](https://express.tonomi.com/applications/upload?metadataUrl=https://raw.github.com/qubell-bazaar/component-oracle-weblogic/1.1-35p/meta.yml)
+[![Install](https://raw.github.com/qubell-bazaar/component-skeleton/master/img/install.png)](https://express.tonomi.com/applications/upload?metadataUrl=https://raw.github.com/qubell-bazaar/component-oracle-weblogic/2.0-43p/meta.yml)
 
 Features
 --------
